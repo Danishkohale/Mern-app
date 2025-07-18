@@ -33,7 +33,10 @@ jobs:
          # docker build -t $IMAGE_NAME_BACK:$IMAGE_TAG .
 
       - name: Scan Image with Trivy
-        uses: aquasecurity/trivy-action@master
+        #uses: aquasecurity/trivy-action@master
+        run: |
+           trivy image frontend-security:latest
+           
         with:
           image-ref: $IMAGE_NAME_FRONT:$IMAGE_TAG
           exit-code: '1'
