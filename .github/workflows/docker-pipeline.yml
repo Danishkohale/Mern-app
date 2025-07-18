@@ -1,4 +1,3 @@
-
 name: Docker Build and Secure Push
 
 on:
@@ -9,7 +8,6 @@ on:
 env:
   IMAGE_NAME_FRONT: frontend-security
   IMAGE_NAME_BACK: backend
-
   IMAGE_TAG: latest
 
 jobs:
@@ -22,29 +20,24 @@ jobs:
 
       - name: Log in to DockerHub
         uses: docker/login-action@v3
-         with:
-           username: ${{ secrets.DOCKERHUB_USERNAME }}
-           password: ${{ secrets.DOCKERHUB_}}
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build Docker Image
+      - name: Build Frontend Docker Image
         run: |
-          pwd
-          docker build -t frontend-security . -f mern/frontend/Dockerfile
-         # docker build -t $IMAGE_NAME_BACK:$IMAGE_TAG .
+          docker build -t $IMAGE_NAME_FRONT:$IMAGE_TAG -f mern/frontend/Dockerfile .
 
-    #  - name: Scan Image with Trivy
-        #uses: aquasecurity/trivy-action@master
-      #  run: |
-     #     sudo trivy image frontend-security:latest
-           
-       # with: 
-        #  image-ref: $IMAGE_NAME_FRONT:$IMAGE_TAG
-       #  exit-code: '1'
-       #   ignore-unfixed: true
-        #  format: 'table'
+      # Optional: Uncomment to enable Trivy scanning
+      # - name: Scan Image with Trivy
+      #   uses: aquasecurity/trivy-action@master
+      #   with:
+      #     image-ref: $IMAGE_NAME_FRONT:$IMAGE_TAG
+      #     format: 'table'
+      #     exit-code: '1'
+      #     ignore-unfixed: true
 
-       - name: Push Docker Image
-         run: |
+      - name: Push Docker Image to DockerHub
+        run: |
           docker tag $IMAGE_NAME_FRONT:$IMAGE_TAG ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME_FRONT:$IMAGE_TAG
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME_FRONT:$IMAGE_TAG
-
