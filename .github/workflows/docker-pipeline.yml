@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t $IMAGE_NAME_FRONT:$IMAGE_TAG -f mern/frontend/dockerfile
+          docker build -t $IMAGE_NAME_FRONT:$IMAGE_TAG -f mern/frontend/Dockerfile
          # docker build -t $IMAGE_NAME_BACK:$IMAGE_TAG .
 
       - name: Scan Image with Trivy
