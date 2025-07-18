@@ -1,0 +1,45 @@
+name: Docker Build and Secure Push
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_NAME_FRONT: frontend-security
+  IMAGE_NAME_BACK: backend
+
+  IMAGE_TAG: latest
+
+jobs:
+  build-scan-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_}}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t $IMAGE_NAME_FRONT:$IMAGE_TAG .
+         # docker build -t $IMAGE_NAME_BACK:$IMAGE_TAG .
+
+      - name: Scan Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: $IMAGE_NAME_FRONT:$IMAGE_TAG
+          exit-code: '1'
+          ignore-unfixed: true
+          format: 'table'
+
+      - name: Push Docker Image
+        run: |
+          docker tag $IMAGE_NAME_FRONT:$IMAGE_TAG ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME_FRONT:$IMAGE_TAG
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME_FRONT:$IMAGE_TAG
+
