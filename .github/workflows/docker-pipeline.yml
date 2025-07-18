@@ -37,7 +37,7 @@ jobs:
       #  run: |
      #     sudo trivy image frontend-security:latest
            
-       # with:
+       # with: 
         #  image-ref: $IMAGE_NAME_FRONT:$IMAGE_TAG
        #  exit-code: '1'
        #   ignore-unfixed: true
