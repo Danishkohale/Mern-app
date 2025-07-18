@@ -35,7 +35,7 @@ jobs:
       - name: Scan Image with Trivy
         #uses: aquasecurity/trivy-action@master
         run: |
-           trivy image frontend-security:latest
+          sudo trivy image frontend-security:latest
            
        # with:
         #  image-ref: $IMAGE_NAME_FRONT:$IMAGE_TAG
